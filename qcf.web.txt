@@ -1,0 +1,951 @@
+total 4720
+-rwxr-xr-x@  1 bharadgo  staff   17415 11 Mar  2015 jquery-ui.theme.css
+-rwxr-xr-x@  1 bharadgo  staff   18016 11 Mar  2015 jquery-ui.structure.css
+-rwxr-xr-x@  1 bharadgo  staff   93925 10 Dec 16:13 jstat.js
+-rw-r--r--@  1 bharadgo  staff  446946 11 Feb 14:32 jquery.dataTables.js
+-r--r--r--@  1 bharadgo  staff  337943 17 Feb 17:39 d3.js
+-rwxr-xr-x@  1 bharadgo  staff  587960  8 Mar 18:36 nv.d3.js
+-rwxr-xr-x@  1 bharadgo  staff   12985  8 Mar 18:36 nv.d3.css
+-rw-r--r--   1 bharadgo  staff    6584 25 Mar 10:15 c.js
+-rw-r--r--   1 bharadgo  staff     382 25 Mar 15:24 wsc.q
+-rw-r--r--@  1 bharadgo  staff  273199 26 Mar 03:23 jquery.js
+-rw-r--r--@  1 bharadgo  staff  470591 26 Mar 03:23 jquery-ui.js
+-rw-r--r--@  1 bharadgo  staff   34459 26 Mar 03:23 jquery-ui.css
+-rw-r--r--   1 bharadgo  staff     920 27 Mar 18:01 stream_layers.js
+-rw-r--r--   1 bharadgo  staff     679 28 Mar 08:39 qcf.testjson.js
+-rw-r--r--@  1 bharadgo  staff    1150 28 Mar 08:42 favicon.ico
+-rw-r--r--   1 bharadgo  staff     639 28 Mar 11:14 qcf.input.js
+-rw-r--r--   1 bharadgo  staff     255 28 Mar 11:57 qcf.log.js
+-rw-r--r--@  1 bharadgo  staff    8196 28 Mar 16:10 .DS_Store
+-rw-r--r--@  1 bharadgo  staff   15455 28 Mar 16:14 jquery.dataTables.css
+-rw-r--r--   1 bharadgo  staff    5690 28 Mar 17:41 qcf.layout.js
+-rw-r--r--@  1 bharadgo  staff    8487 28 Mar 17:46 index.html
+-rw-r--r--   1 bharadgo  staff    4167 28 Mar 18:22 qcf.wsclient.js
+-rw-r--r--   1 bharadgo  staff   10775 28 Mar 18:23 qcf.charts.js
+drwxr-xr-x@ 28 bharadgo  staff     952 28 Mar 19:21 images
+drwx------+ 35 bharadgo  staff    1190 28 Mar 19:41 ..
+-rw-r--r--   1 bharadgo  staff       0 28 Mar 19:44 qcf.web.txt
+drwxr-xr-x  27 bharadgo  staff     918 28 Mar 19:44 .
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link href="nv.d3.css" rel="stylesheet">
+    <link href="jquery-ui.css" rel="stylesheet">
+    <link href="jquery-ui.structure.css" rel="stylesheet">
+    <link href="jquery-ui.theme.css" rel="stylesheet">
+    <link href="jquery.dataTables.css" rel="stylesheet">
+    <script src="c.js"></script>
+    <script src="d3.js"></script>
+    <script src="nv.d3.js"></script>
+    <script src="jstat.js"></script>
+    <script src="jquery.js"></script>
+    <script src="jquery-ui.js"></script>
+    <script src="jquery.dataTables.js"></script>
+    <script src="qcf.log.js"></script>
+    <script src="qcf.input.js"></script>
+    <script src="qcf.layout.js"></script>
+    <script src="qcf.charts.js"></script>
+    <script src="qcf.wsclient.js"></script>
+    <script src="stream_layers.js"></script>
+    <script src="qcf.testjson.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CRB APAC console</title>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        text {
+            font: 7px sans-serif;
+        }
+        svg {
+            display: block;
+        }
+        html, body, svg {
+            height: 100%;
+            width: 100%;
+            float: center;
+        }
+
+        .ui-tabs .ui-tabs-panel { padding: 0em 0em 0em 0em; }
+        .ui-tabs .ui-tabs-nav li a {font-size:6pt !important;}
+	#tabs { margin: 0; padding: 0; border: 0px; width:99%; }
+	#dash { overflow: scroll; width:100%; }
+	#hist { overflow: scroll; width:100%; }
+	#live { overflow: scroll; width:100%; }
+	#msgs { overflow: scroll; width:100%; }
+
+        .topbar { background: #990000; border-bottom: solid 1px #EEE; padding: 1px 0; text-align: center; font: 8px sans-serif; color: white; }
+
+        div { float: left; }
+
+        #chart_d1 { height: 96%; width: 100%; float: center; }
+        #chart_d2 { height: 96%; width: 100%; float: center; }
+        #chart_d3 { height: 96%; width: 100%; float: center; }
+        #chart_d4 { height: 96%; width: 100%; float: center; }
+
+        #chart_h1 { height: 96%; width: 100%; float: center; }
+        #chart_h2 { height: 96%; width: 100%; float: center; }
+        #chart_h3 { height: 96%; width: 100%; float: center; }
+        #chart_h4 { height: 96%; width: 100%; float: center; }
+
+        #chart_l1 { height: 96%; width: 100%; float: center; }
+        #chart_l2 { height: 96%; width: 100%; float: center; }
+        #chart_l3 { height: 96%; width: 100%; float: center; }
+        #chart_l4 { height: 96%; width: 100%; float: center; }
+        #chart_l5 { height: 96%; width: 100%; float: center; font-size:6pt !important; border: 0px solid black; }
+        .dataTables_wrapper { font-size: 6pt }
+
+        #resizable_d1 { width: 50%; height: 33%; border: 0px solid #c9c3ba; color: #42454a; background-color: #f1f0ee; float: left; }
+        #resizable_d2 { width: 50%; height: 66%; border: 0px solid #c9c3ba; color: #42454a; background-color: #f1f0ee; float: right; }
+        #resizable_d3 { width: 50%; height: 33%; border: 0px solid #c9c3ba; color: #42454a; background-color: #f1f0ee; float: left; }
+        #resizable_d4 { width: 100%; height: 33%; border: 0px solid #c9c3ba; color: #42454a; background-color: #f1f0ee; float: left; }
+
+        #resizable_h1 { width: 50%; height: 50%; border: 0px solid #c9c3ba; color: #42454a; background-color: #f1f0ee; float: left; }
+        #resizable_h2 { width: 50%; height: 50%; border: 0px solid #c9c3ba; color: #42454a; background-color: #f1f0ee; float: right; }
+        #resizable_h3 { width: 50%; height: 50%; border: 0px solid #c9c3ba; color: #42454a; background-color: #f1f0ee; float: left; }
+        #resizable_h4 { width: 50%; height: 50%; border: 0px solid #c9c3ba; color: #42454a; background-color: #f1f0ee; float: left; }
+
+        #resizable_l1 { width: 25%; height: 50%; border: 0px solid #c9c3ba; color: #42454a; background-color: #f1f0ee; float: left; }
+        #resizable_l2 { width: 25%; height: 50%; border: 0px solid #c9c3ba; color: #42454a; background-color: #f1f0ee; float: left; }
+        #resizable_l3 { width: 50%; height: 50%; border: 0px solid #c9c3ba; color: #42454a; background-color: #f1f0ee; float: right; }
+        #resizable_l4 { width: 50%; height: 50%; border: 0px solid #c9c3ba; color: #42454a; background-color: #f1f0ee; float: left; }
+        #resizable_l5 { width: 50%; height: 50%; border: 0px solid #c9c3ba; color: #42454a; background-color: #f1f0ee; float: left; }
+
+        #settings { width:100%; height: 10%; border: 0px solid #42454a; color: #42454a; background-color: #f1f0ee; float:left; }
+        #logpanel { width:100%; height: 90%; border: 0px solid #42454a; color: #42454a; background-color: #f1f0ee; float:left; }
+        #logline { width:100%; text-align:left; color: #000000; background-color: #f1f0ee; border: 0px solid #42454a; font-size:7pt !important; }
+        #settingcontrols { width:100%; height: 10%; border: 0px solid #42454a; color: #42454a; background-color: #f1f0ee; float:left; font-size:7pt !important; }
+
+        div.ui-datepicker{ font-size:10px; }
+        .ui-widget-header { margin: 2px 2px 0 0; font-size: 6pt; font-weight:normal; }
+        .ui-resizable-helper { border: 2px dotted #00F; }
+    </style>
+  </head>
+
+  <body>
+  <div id="tabs">
+	<ul>
+	<li><a href="#dash">DASH</a></li>
+	<li><a href="#hist">HIST</a></li>
+	<li><a href="#live">LIVE</a></li>
+	<li><a href="#msgs">..</a></li>
+	</ul>
+    <div id="dash">
+	<div id="resizable_d1" class="ui-widget-content"><h6 class="ui-widget-header">Price movement</h6><div id="chart_d1"><svg></svg></div></div>
+	<div id="resizable_d2" class="ui-widget-content"><h6 class="ui-widget-header">Volumes by RouteRsn by Riskclass</h6><div id="chart_d2"><svg></svg></div></div>
+	<div id="resizable_d3" class="ui-widget-content"><h6 class="ui-widget-header">Returns by Riskclass</h6><div id="chart_d3"><svg></svg></div></div>
+	<div id="resizable_d4" class="ui-widget-content"><h6 class="ui-widget-header">Notionals by date</h6><div id="chart_d4"><svg></svg></div></div>
+    </div>
+    <div id="hist">
+	<div id="resizable_h1" class="ui-widget-content"><h6 class="ui-widget-header">PnL Bubble</h6><div id="chart_h1"><svg></svg></div></div>
+	<div id="resizable_h2" class="ui-widget-content"><h6 class="ui-widget-header">Internalized Vol and PnL</h6><div id="chart_h2"><svg></svg></div></div>    
+	<div id="resizable_h3" class="ui-widget-content"><h6 class="ui-widget-header">PnL BoxPlot by RouteRsn</h6><div id="chart_h3"><svg></svg></div></div>
+	<div id="resizable_h4" class="ui-widget-content"><h6 class="ui-widget-header">Internalized Vol Histogram</h6><div id="chart_h4"><svg></svg></div></div>
+    </div>
+    <div id="live">
+	<div id="resizable_l1" class="ui-widget-content"><h6 class="ui-widget-header">Flow by Riskclass</h6><div id="chart_l1"><svg></svg></div></div>
+        <div id="resizable_l2" class="ui-widget-content"><h6 class="ui-widget-header">Flow by RouteRsn</h6><div id="chart_l2"><svg></svg></div></div>
+	<div id="resizable_l3" class="ui-widget-content"><h6 class="ui-widget-header">Live TM PnL</h6><div id="chart_l3"><svg></svg></div></div>    
+	<div id="resizable_l4" class="ui-widget-content"><h6 class="ui-widget-header">Trades Parallel Plot</h6><div id="chart_l4"><svg></svg></div></div>
+	<div id="resizable_l5" class="ui-widget-content"><h6 class="ui-widget-header">Trades table</h6><table id="chart_l5" class="display"></table></div>
+    </div>
+    <div id="msgs">
+	<div id="settings" class="ui-widget-content">
+	  <h6 class="ui-widget-header">Settings</h6>
+	  <div id="settingcontrols">
+	      <label for="from">from</label>
+	      <input type="text" id="from" name="from">
+	      <label for="to">to</label>
+	      <input type="text" id="to" name="to">
+	      <button type="button" onclick="setDate()">set</button>
+	  </div>
+	</div>
+	<div id="logpanel"><h6 class="ui-widget-header">Console</h6></div>
+    </div>
+  </div>
+</body>
+</html>// chart & chart data handlers
+
+// ohlc
+genOhlcChart = function() {
+  //var chart = nv.models.ohlcBarChart();
+  var chart = nv.models.candlestickBarChart();
+  chart = chart.x(function(d) { return d3.time.format("%Y-%m-%d").parse(d['date']) })
+	       .y(function(d) { return d['close'] });
+  chart.xAxis
+       .tickFormat(function(d) {
+	  return d3.time.format("%Y.%m.%d")(new Date(d));
+	});
+  chart.yAxis
+       .axisLabel("Price")
+       .tickFormat(function(d,i) {
+	  return '$' + d3.format(',.1f')(d);
+       });
+  nv.addGraph(function(){return chart;});
+  return chart;
+};
+onOhlcData = function(data) {
+  var cdata = [{values:data.data}];
+  d3.select("#chart_d1 svg")
+    .datum(cdata)
+    .transition()
+    .duration(0)
+    .call(ohlcChart);
+    nv.utils.windowResize(ohlcChart.update);
+};
+
+// line-bar chart
+genLineBarChart = function() {
+  var chart = nv.models.linePlusBarChart();
+  chart = chart.x(function(d,i) {
+		  var dt = d3.time.format('%Y-%m-%d').parse(d[0]);
+		  return (new Date(dt)); })
+	       .y(function(d,i) {
+		  return d[1] });
+   chart.xAxis.tickFormat(function(d) {
+     return d3.time.format('%Y.%m.%d')(new Date(d))
+   });
+   chart.x2Axis.tickFormat(function(d) {
+     return d3.time.format('%Y.%m.%d')(new Date(d))
+   });
+   chart.y1Axis
+	.tickFormat(d3.format(',f'));
+   chart.y2Axis
+	.tickFormat(function(d) { return '$' + d3.format(',f')(d) });
+   chart.bars.forceY([0]).padData(false);
+  nv.addGraph(function(){return chart;});
+  return chart;
+};
+onLineBarData = function(data) {
+  var cdata = data.data;
+  d3.select('#chart_h2 svg')
+    .datum(cdata)
+    .transition()
+    .duration(0)
+    .call(lineBarChart);
+  nv.utils.windowResize(lineBarChart.update);
+};
+
+// disc bar chart
+genDiscBarChart = function() {
+  var chart = nv.models.discreteBarChart();
+  chart = chart.x(function(d) { return d[0] })    //Specify the data accessors.
+	       .y(function(d) { return d[1] })
+	       .staggerLabels(true)    //Too many bars and not enough room? Try staggering labels.
+	       .showValues(true);      //...instead, show the bar value right on top of each bar.
+  nv.addGraph(function(){return chart;});
+  return chart;
+};
+onDiscBarData = function(data) {
+  var cdata = [ data.data ];
+  d3.select('#chart_d3 svg')
+    .datum(cdata)
+    .transition()
+    .duration(0)
+    .call(discBarChart);
+  nv.utils.windowResize(discBarChart.update);
+};
+
+// area chart
+genStackAreaChart = function() {
+  var chart = nv.models.stackedAreaChart()
+      .margin({right: 100})
+      .x(function(d) { return  d3.time.format("%Y-%m-%d").parse(d[0]) })   //We can modify the data accessor functions...
+      .y(function(d) { return d[1] })   //...in case your data is formatted differently.
+      .useInteractiveGuideline(false)    //Tooltips which show all data points. Very nice!
+      .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
+      .showControls(true)         //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
+      .clipEdge(true);
+  //Format x-axis labels with custom function.
+  chart.xAxis.tickFormat(function(d) { 
+       return d3.time.format('%Y.%m.%d')(new Date(d))
+  });
+  chart.yAxis
+       .tickFormat(d3.format(',f'));
+  nv.addGraph(function(){return chart;});
+  return chart;      
+};
+onStackAreaData = function(data) {
+  var cdata = data.data;
+  d3.select('#chart_d4 svg')
+    .datum(cdata)
+    .transition()
+    .duration(0)
+    .call(stackAreaChart);
+  nv.utils.windowResize(stackAreaChart.update);
+};
+
+// bubble chart
+genBubbleChart = function() {
+  var chart = nv.models.scatterChart()
+      .showDistX(true)    //showDist, when true, will display those little distribution lines on the axis.
+      .showDistY(true)
+      .useVoronoi(true)
+      .color(d3.scale.category20().range());
+  //Axis settings
+  chart.xAxis.tickFormat(d3.format('.02f'));
+  chart.yAxis.tickFormat(d3.format('.02f'));
+  nv.addGraph(function(){return chart;});
+  return chart;
+};
+onBubbleData = function(data) {
+  var cdata = data.data;
+  d3.select('#chart_h1 svg')
+    .datum(cdata)
+    .transition()
+    .duration(0)
+    .call(bubbleChart);
+  nv.utils.windowResize(bubbleChart.update);
+};
+
+// pie chart
+genPieChart = function() {
+  var chart = nv.models.pieChart()
+                .x(function(d) { return d.sym })
+                .y(function(d) { return d.notnl })
+                .showLabels(true)     //Display pie labels
+                .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
+                .labelType("percent") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
+                .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
+                .donutRatio(0.30);    //Configure how big you want the donut hole size to be.
+  nv.addGraph(function(){return chart;});
+  return chart;
+};
+onPieData = function(data) {
+  var cdata = data.data;
+  d3.select("#chart_l1 svg")
+    .datum(cdata)
+    .transition()
+    .duration(0)
+    .call(pieChart);
+  nv.utils.windowResize(pieChart.update);
+};
+
+// donut chart
+genDonutChart = function() {
+  var chart = nv.models.pieChart()
+                .x(function(d) { return d.sym })
+                .y(function(d) { return d.notnl })
+                .showLabels(true)     //Display pie labels
+                .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
+                .labelType("percent") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
+                .donut(false)         //Turn on Donut mode. Makes pie chart look tasty!
+                .donutRatio(0.30);    //Configure how big you want the donut hole size to be.
+  nv.addGraph(function(){return chart;});
+  return chart;
+};
+onDonutData = function(data) {
+  var cdata = data.data;
+  d3.select("#chart_l2 svg")
+    .datum(cdata)
+    .transition()
+    .duration(0)
+    .call(donutChart);
+  nv.utils.windowResize(donutChart.update);
+};
+
+// horiz bar chart
+genHorizBarChart = function() {
+  var chart = nv.models.multiBarHorizontalChart()
+      .x(function(d) { return d.cond })
+      .y(function(d) { return d.size })
+      .showValues(false)
+      .showControls(true);
+  chart.yAxis
+      .tickFormat(d3.format(',f'));
+  nv.addGraph(function(){return chart;});
+  return chart;
+};
+onHorizBarData = function(data) {
+  var cdata = data.data;
+  d3.select("#chart_d2 svg")
+    .datum(cdata)
+    .transition()
+    .duration(0)
+    .call(horizBarChart);
+  nv.utils.windowResize(horizBarChart.update);
+};
+
+// line view chart
+genLineViewChart = function() {
+  var chart = nv.models.lineWithFocusChart();
+  chart.xAxis
+    .tickFormat(d3.format(',f'));
+  chart.yAxis
+    .tickFormat(d3.format(',.2f'));
+  nv.addGraph(function(){return chart;});
+  return chart;
+};
+onLineViewData = function(data) {
+  var cdata = data.data;
+  //cdata = testStreamData(); 
+  d3.select("#chart_l3 svg")
+    .datum(cdata)
+    .transition()
+    .duration(0)
+    .call(lineViewChart);
+  nv.utils.windowResize(lineViewChart.update);
+};
+
+// box plot chart
+genBoxPlotChart = function() {
+  var chart = nv.models.boxPlotChart()
+      .x(function(d) { return d.label })
+      .staggerLabels(true)
+      .maxBoxWidth(75) // prevent boxes from being incredibly wide
+      .yDomain([0, 500]);
+  nv.addGraph(function(){return chart;});
+  return chart;
+};
+onBoxPlotData = function(data) {
+  var cdata = data.data;
+  cdata = testBoxPlotData(); 
+  d3.select("#chart_h3 svg")
+    .datum(cdata)
+    .transition()
+    .duration(0)
+    .call(boxPlotChart);
+  nv.utils.windowResize(boxPlotChart.update);
+};
+
+// histogram chart
+genHistogramChart = function() {
+  var chart = nv.models.linePlusBarChart()
+	//We can set x data accessor to use index. Reason? So the bars all appear evenly spaced.
+	.x(function(d,i) { return d[0] })
+	.y(function(d,i) { return d[1] })
+	.focusEnable(false);
+  chart.xAxis.tickFormat(function(d) {
+    return d
+  });
+  chart.y1Axis
+      .tickFormat(d3.format(',f'));
+  chart.y2Axis
+      .tickFormat(function(d) { return d3.format('%')(d) });
+  chart.bars.forceY([0]);
+  nv.addGraph(function(){return chart;});
+  return chart;
+};
+onHistogramData = function(data) {
+  var cdata = data.data;
+
+  //define margins for chart, histogram bin size, and the x scale for the bins
+  var numBins = 50;
+  var histData = [];
+  var jstat = this.jStat(cdata);
+  var x = d3.scale.linear().domain([0, Math.max(...cdata)]).range([0, numBins]);
+  var binDat = d3.layout.histogram().bins(x.ticks(numBins))(cdata);
+  var cdfObj = {'key': 'CDF', 'color': '#333', 'values': []};
+  var cntObj = {'key': 'Count', 'bar': true, 'color': '#ccf', 'values': []};
+  for(var i = 0; i < binDat.length; i++) {
+    cntObj.values.push([binDat[i].x,binDat[i].y]);
+    cdfObj.values.push([binDat[i].x,jstat.normal(jstat.mean(), jstat.stdev()).cdf(binDat[i].x)]);
+  }
+  histData.push(cntObj);
+  histData.push(cdfObj);
+
+  d3.select("#chart_h4 svg")
+    .datum(histData)
+    .transition()
+    .duration(0)
+    .call(histogramChart);
+  nv.utils.windowResize(histogramChart.update);
+};
+
+// parallel plot
+genParallelCoordChart = function() {
+  var chart = nv.models.parallelCoordinates()
+        .dimensionNames(["pnl", "ADV", "SR", "spread"])
+        .dimensionFormats([",f", "%", "%", ",.1f"])
+        .lineTension(0.85);
+  nv.addGraph(function(){return chart;});
+  return chart;
+};
+onParallelCoordData = function(data) {
+  var cdata = data.data;
+  d3.select('#chart_l4 svg')
+    .datum(cdata)
+    .transition()
+    .duration(0)
+    .call(parallelCoordChart);
+  nv.utils.windowResize(parallelCoordChart.update);
+};
+
+// trades table
+genTradesDataTable = function(data) {
+  var table = $('#chart_l5').DataTable({
+    "bProcessing": true,
+    "bAutoWidth": true,
+    scrollY: true,
+    "aaData": data,
+    "aoColumns": [
+	{ "mData": "date", "title": "Date" }, // <-- which values to use inside object
+	{ "mData": "sym", "title": "Symbol" },
+	{ "mData": "open", "title": "Open" },
+	{ "mData": "high", "title": "High" },
+	{ "mData": "low", "title": "Low" },
+	{ "mData": "close", "title": "Close" },
+	{ "mData": "size", "title": "Size" }
+    ]  });
+  return table;
+};
+onTradesTableData = function(data) {
+  tradesDataTable.destroy();
+  tradesDataTable = genTradesDataTable(data.data);
+}
+
+// create required instances of charts
+var ohlcChart = genOhlcChart();
+var lineBarChart = genLineBarChart();
+var discBarChart = genDiscBarChart();
+var stackAreaChart = genStackAreaChart();
+var bubbleChart = genBubbleChart();
+var pieChart = genPieChart();
+var donutChart = genDonutChart();
+var horizBarChart = genHorizBarChart();
+var lineViewChart = genLineViewChart();
+var boxPlotChart = genBoxPlotChart();
+var histogramChart = genHistogramChart();
+var parallelCoordChart = genParallelCoordChart();
+var tradesDataTable = genTradesDataTable([]);
+$(function() {
+  $( "#from" ).datepicker({
+    defaultDate: "-1m",
+    changeMonth: true,
+    numberOfMonths: 2,
+    onClose: function( selectedDate ) {
+      $( "#to" ).datepicker( "option", "minDate", selectedDate );
+    }
+  });
+  $( "#to" ).datepicker({
+    defaultDate: "+1m",
+    changeMonth: true,
+    numberOfMonths: 2,
+    onClose: function( selectedDate ) {
+      $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+    }
+  });
+});
+
+function setDate() {
+  var maxd = $( "#to" )[0].value;
+  var mind = $( "#from" )[0].value;
+  logMsg("Setting date range to minDate:" + mind + " maxDate: " + maxd);
+  requestQCFData();
+};
+$(function () {
+    var tabs = $("#tabs").tabs({
+        heightStyle: "fill"
+    });
+    $('body').on('resize', function () {
+        tabs.tabs('refresh');
+        window.dispatchEvent(new Event('resize'));
+    });
+    $('#tabs').tabs({
+        activate: function(event ,ui){
+          window.dispatchEvent(new Event('resize'));
+        }
+    });
+});
+
+$(function() {
+  $("#resizable_d1").draggable({ handle: "h6" });
+  $("div, h6").disableSelection();
+  $("#resizable_d1" ).resizable({
+    helper: "ui-resizable-helper"
+  });
+  $("#resizable_d1" ).resizable({
+    grid: 10
+  });
+  $("#resizable_d1").resizable({
+    stop: function(event, ui) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  });
+});
+
+$(function() {
+  $("#resizable_d2").draggable({ handle: "h6" });
+  $("div, h6").disableSelection();
+  $("#resizable_d2" ).resizable({
+    helper: "ui-resizable-helper"
+  });
+  $("#resizable_d2" ).resizable({
+    grid: 10
+  });
+  $("#resizable_d2").resizable({
+    stop: function(event, ui) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  });
+});
+
+$(function() {
+  $("#resizable_d3").draggable({ handle: "h6" });
+  $("div, h6").disableSelection();
+  $("#resizable_d3" ).resizable({
+    helper: "ui-resizable-helper"
+  });
+  $("#resizable_d3" ).resizable({
+    grid: 10
+  });
+  $("#resizable_d3").resizable({
+    stop: function(event, ui) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  });
+});
+
+$(function() {
+  $("#resizable_d4").draggable({ handle: "h6" });
+  $("div, h6").disableSelection();
+  $("#resizable_d4" ).resizable({
+    helper: "ui-resizable-helper"
+  });
+  $("#resizable_d4" ).resizable({
+    grid: 10
+  });
+  $("#resizable_d4").resizable({
+    stop: function(event, ui) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  });
+});
+
+$(function() {
+  $("#resizable_h1").draggable({ handle: "h6" });
+  $("div, h6").disableSelection();
+  $("#resizable_h1" ).resizable({
+    helper: "ui-resizable-helper"
+  });
+  $("#resizable_h1" ).resizable({
+    grid: 10
+  });
+  $("#resizable_h1").resizable({
+    stop: function(event, ui) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  });
+});
+
+$(function() {
+  $("#resizable_h2").draggable({ handle: "h6" });
+  $("div, h6").disableSelection();
+  $("#resizable_h2" ).resizable({
+    helper: "ui-resizable-helper"
+  });
+  $("#resizable_h2" ).resizable({
+    grid: 10
+  });
+  $("#resizable_h2").resizable({
+    stop: function(event, ui) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  });
+});
+
+$(function() {
+  $("#resizable_h3").draggable({ handle: "h6" });
+  $("div, h6").disableSelection();
+  $("#resizable_h3" ).resizable({
+    helper: "ui-resizable-helper"
+  });
+  $("#resizable_h3" ).resizable({
+    grid: 10
+  });
+  $("#resizable_h3").resizable({
+    stop: function(event, ui) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  });
+});
+
+$(function() {
+  $("#resizable_h4").draggable({ handle: "h6" });
+  $("div, h6").disableSelection();
+  $("#resizable_h4" ).resizable({
+    helper: "ui-resizable-helper"
+  });
+  $("#resizable_h4" ).resizable({
+    grid: 10
+  });
+  $("#resizable_h4").resizable({
+    stop: function(event, ui) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  });
+});
+
+$(function() {
+  $("#resizable_l1").draggable({ handle: "h6" });
+  $("div, h6").disableSelection();
+  $("#resizable_l1" ).resizable({
+    helper: "ui-resizable-helper"
+  });
+  $("#resizable_l1" ).resizable({
+    grid: 10
+  });
+  $("#resizable_l1").resizable({
+    stop: function(event, ui) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  });
+});
+
+$(function() {
+  $("#resizable_l2").draggable({ handle: "h6" });
+  $("div, h6").disableSelection();
+  $("#resizable_l2" ).resizable({
+    helper: "ui-resizable-helper"
+  });
+  $("#resizable_l2" ).resizable({
+    grid: 10
+  });
+  $("#resizable_l2").resizable({
+    stop: function(event, ui) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  });
+});
+
+$(function() {
+  $("#resizable_l3").draggable({ handle: "h6" });
+  $("div, h6").disableSelection();
+  $("#resizable_l3" ).resizable({
+    helper: "ui-resizable-helper"
+  });
+  $("#resizable_l3" ).resizable({
+    grid: 10
+  });
+  $("#resizable_l3").resizable({
+    stop: function(event, ui) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  });
+});
+
+$(function() {
+  $("#resizable_l5").draggable({ handle: "h6" });
+  $("div, h6").disableSelection();
+  $("#resizable_l5" ).resizable({
+    helper: "ui-resizable-helper"
+  });
+  $("#resizable_l5" ).resizable({
+    grid: 10
+  });
+  $("#resizable_l5").resizable({
+    stop: function(event, ui) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  });
+});
+$(function() {
+  $("#resizable_l4").draggable({ handle: "h6" });
+  $("div, h6").disableSelection();
+  $("#resizable_l4" ).resizable({
+    helper: "ui-resizable-helper"
+  });
+  $("#resizable_l4" ).resizable({
+    grid: 10
+  });
+  $("#resizable_l4").resizable({
+    stop: function(event, ui) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  });
+});
+
+$(function() {
+  $("#settings").draggable({ handle: "h6" });
+  $("div, h6").disableSelection();
+  $("#settings" ).resizable({
+    helper: "ui-resizable-helper"
+  });
+  $("#settings" ).resizable({
+    grid: 10
+  });
+  $("#settings").resizable({
+    stop: function(event, ui) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  });
+});
+
+$(function() {
+  $("#logpanel").draggable({ handle: "h6" });
+  $("div, h6").disableSelection();
+  $("#logpanel" ).resizable({
+    helper: "ui-resizable-helper"
+  });
+  $("#logpanel" ).resizable({
+    grid: 10
+  });
+  $("#logpanel").resizable({
+    stop: function(event, ui) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  });
+});
+
+
+function logMsg(message) {
+  $("<div />",{ id:'logline', class: 'topbar', text: Date() + ": " + message + " "}).hide().appendTo("#logpanel")
+    .slideDown('fast').delay(24*60*60*1000).slideUp(function() { $(this).remove(); });
+  console.log(message);
+};
+// sample test data
+function testStreamData() {
+  return stream_layers(3,128,.1).map(function(data, i) {
+    return { 
+      key: 'Stream' + i,
+      values: data
+    };
+  });
+};
+
+function testBoxPlotData() {
+ return  [
+    {
+      label: "Sample A",
+      values: {
+	Q1: 120,
+	Q2: 150,
+	Q3: 200,
+	whisker_low: 115,
+	whisker_high: 210,
+	outliers: [50, 100, 225]
+      },
+    },
+    {
+      label: "Sample B",
+      values: {
+	Q1: 300,
+	Q2: 350,
+	Q3: 400,
+	whisker_low: 225,
+	whisker_high: 425,
+	outliers: [175]
+      },
+    },
+    {
+      label: "Sample C",
+      values: {
+	Q1: 50,
+	Q2: 100,
+	Q3: 125,
+	whisker_low: 25,
+	whisker_high: 175,
+	outliers: [0]
+      },
+    }
+  ];
+};
+// server connection
+var cs = 'ws://192.168.0.3:1234';
+var ws = new WebSocket(cs);
+ws.binaryType = 'arraybuffer';
+
+// cmds
+var ohlcCmd = "select from daily where sym = `AAPL";
+var lineBarCmd = "t1:select date,size,close from daily where sym = `GOOG;(enlist (`key`bar`values)!(`Volume;1b;{(x[`date];x[`size])} each t1)),((`key`bar`values)!(`Price;0b;{(x[`date];x[`close])} each t1))";
+var discBarCmd = "t1:0!select retrn:100f*(first close - last close)%(first close) by sym from daily;(`key`values)!(`Returns;{(x[`sym];x[`retrn])} each t1)";
+var stackAreaCmd = "t1:0!select price by sym,date from daily;{(`key`values)!(x;{(x[`date],x[`price])} each select from t1 where sym = x)}each distinct t1[`sym]";
+var bubbleCmd = "t1:0!select price%sum daily[`price],move1:100f*(close-open)%open,move2:100f*(high-low)%open by sym,date from daily where sym in `AAPL`MSFT`ORCL`HPQ;{(`key`values)!(x;{(`x`y`size)!((x[`x][0];x[`y][0];x[`size][0]))} each (select x:move1,y:move2,size:price from t1 where sym=x))} each distinct t1[`sym]";
+var pieCmd = "0!select notnl:sum price by sym from daily where sym in `ORCL`DOW`HPQ`AIG";
+var donutCmd = "0!select notnl:sum price by sym from daily where sym in `AAPL`GOOG`IBM`MSFT";
+var horizBarCmd = "t1:0!select sum size by sym,cond from trade where sym in `AAPL`GOOG`IBM`MSFT;0!raze {(enlist (enlist `key)!(enlist x))!(enlist ((enlist `values)!(enlist select cond,size-min size from t1 where sym = x)))} each (select distinct sym from t1)`sym";
+var lineViewCmd = "t1:0!select sym,price from trade where sym in `MSFT`ORCL`HPQ`AIG, date = 2014.05.01;0!raze {(enlist (enlist `key)!(enlist x))!(enlist ((enlist `values)!(enlist ((select x:i,y:price-min price from (select from t1 where sym = x)))[til 80])))} each (select distinct sym from t1)`sym";
+var boxPlotCmd = "10#select from daily";
+var histogramCmd = "(select close from daily)`close";
+var parallelCoordCmd = "select pnl,ADV,SR,spread,name:sym from 0!select pnl:1e6*(last close - first open)%first open, ADV:last price%avg price, SR:0.20, spread: 10e4*0.01%last price by sym from daily";
+var tradesTableCmd = "33#select from daily"
+
+// req timer
+function requestQCFData() {
+  logMsg("Requesting data from QCF");
+  ws.sendcmd(ohlcCmd);
+  ws.sendcmd(lineBarCmd);
+  ws.sendcmd(discBarCmd);
+  ws.sendcmd(stackAreaCmd);
+  ws.sendcmd(bubbleCmd);
+  ws.sendcmd(pieCmd);
+  ws.sendcmd(donutCmd);
+  ws.sendcmd(horizBarCmd);
+  ws.sendcmd(lineViewCmd);
+  ws.sendcmd(boxPlotCmd);
+  ws.sendcmd(histogramCmd);
+  ws.sendcmd(parallelCoordCmd);
+  ws.sendcmd(tradesTableCmd);
+};
+function parseQCFResult(data) {
+  if (data.fname == ohlcCmd)
+    onOhlcData(data);
+  if (data.fname == lineBarCmd)
+    onLineBarData(data);
+  if (data.fname == discBarCmd)
+    onDiscBarData(data);
+  if (data.fname == stackAreaCmd)
+    onStackAreaData(data);
+  if (data.fname == bubbleCmd)
+    onBubbleData(data);
+  if (data.fname == pieCmd)
+    onPieData(data);
+  if (data.fname == donutCmd)
+    onDonutData(data);
+  if (data.fname == horizBarCmd)
+    onHorizBarData(data);
+  if (data.fname == lineViewCmd)
+    onLineViewData(data);
+  if (data.fname == boxPlotCmd)
+    onBoxPlotData(data);
+  if (data.fname == histogramCmd)
+    onHistogramData(data);
+  if (data.fname == parallelCoordCmd)
+    onParallelCoordData(data);
+  if (data.fname == tradesTableCmd)
+    onTradesTableData(data);
+};
+setInterval(requestQCFData,10*60*1000);
+
+// send command on the websocket  
+ws.sendcmd = function (args) {
+  logMsg("Sending command over websocket: " + arguments[0]);
+  var len = arguments.length,data = {},i;
+  data['fname'] = arguments[0];
+  for (i=1;i < len;i++) 
+    data['arg'+i] = arguments[i];
+  ws.send(serialize(JSON.stringify(data)));
+};    
+// WebSocket event handlers
+ws.onopen = function () {
+  logMsg("Connected to crb qcf over websocket " + cs);
+  requestQCFData();
+};
+ws.onclose = function () {
+  logMsg("Disconnected from crb qcf " + cs);
+};
+ws.onmessage = function (event) {
+  var data = JSON.parse(deserialize(event.data));
+  logMsg("Received result for command [" + data.fname + "] with result count: " + data.data.length);
+  parseQCFResult(data);
+};
+ws.onerror = function (error) {
+  logMsg("Error " + error.data);
+};
+/.z.ws:{show .j.k -9!x};
+/.z.ws:{neg[.z.w].Q.s value x};
+/.z.ws:{neg[.z.w]@[.Q.s value@;x;{"'",x,"\n"}]};
+
+dataformat:{`fname`data!(x;y)};
+evaluate:{dataformat[x`fname;?[1 = count x;(value x`fname);(value x`fname) @ (x _ `fname)]]};
+.z.ws:{neg[.z.w] -8!.j.j @[evaluate;.j.k -9!x;{'"error: ",x}]};
+
+/all functions are of form fn[] or fn[()!()]
+gettbl:{ (value x`arg1)["i"$x`arg2] };
