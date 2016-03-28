@@ -8,15 +8,13 @@ key = ""
 class AuthHandler(SimpleHTTPRequestHandler):
     ''' Main class to present webpages and authentication. '''
     def do_HEAD(self):
-        print "send header"
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
     def do_AUTHHEAD(self):
-        print "send header"
         self.send_response(401)
-        self.send_header('WWW-Authenticate', 'Basic realm=\"Test\"')
+        self.send_header('WWW-Authenticate', 'Basic realm=\"CRB\"')
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
@@ -47,4 +45,3 @@ if __name__ == '__main__':
         sys.exit()
     key = base64.b64encode(sys.argv[2])
     test()
-    
