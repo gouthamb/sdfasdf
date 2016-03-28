@@ -38,7 +38,6 @@ def test(HandlerClass = AuthHandler,
          ServerClass = BaseHTTPServer.HTTPServer):
     BaseHTTPServer.test(HandlerClass, ServerClass)
 
-
 if __name__ == '__main__':
     if len(sys.argv)<3:
         print "usage SimpleAuthServer.py [port] [username:password]"
