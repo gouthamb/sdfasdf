@@ -40,7 +40,7 @@ def test(HandlerClass = AuthHandler,
 
 if __name__ == '__main__':
     if len(sys.argv)<3:
-        print "usage SimpleAuthServer.py [port] [username:password]"
+        print "usage: python ahttps.py [port] [username:password]"
         sys.exit()
     key = base64.b64encode(sys.argv[2])
     test()
