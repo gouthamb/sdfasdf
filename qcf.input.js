@@ -22,4 +22,5 @@ function setDate() {
   var mind = $( "#from" )[0].value;
   logMsg("Setting date range to minDate:" + mind + " maxDate: " + maxd);
   requestQCFData();
+  testExplodingBoxPlot();  
 };

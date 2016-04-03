@@ -1,5 +1,5 @@
 // server connection
-var cs = 'ws://192.168.0.3:1234';
+var cs = 'ws://localhost:1234';
 var ws = new WebSocket(cs);
 ws.binaryType = 'arraybuffer';
 
@@ -13,7 +13,7 @@ var pieCmd = "0!select notnl:sum price by sym from daily where sym in `ORCL`DOW`
 var donutCmd = "0!select notnl:sum price by sym from daily where sym in `AAPL`GOOG`IBM`MSFT";
 var horizBarCmd = "t1:0!select sum size by sym,cond from trade where sym in `AAPL`GOOG`IBM`MSFT;0!raze {(enlist (enlist `key)!(enlist x))!(enlist ((enlist `values)!(enlist select cond,size-min size from t1 where sym = x)))} each (select distinct sym from t1)`sym";
 var lineViewCmd = "t1:0!select sym,price from trade where sym in `MSFT`ORCL`HPQ`AIG, date = 2014.05.01;0!raze {(enlist (enlist `key)!(enlist x))!(enlist ((enlist `values)!(enlist ((select x:i,y:price-min price from (select from t1 where sym = x)))[til 80])))} each (select distinct sym from t1)`sym";
-var boxPlotCmd = "10#select from daily";
+var boxPlotCmd = "0!select date,size:close by sym from daily where sym in `AAPL`MSFT`ORCL`HPQ`AIG";
 var histogramCmd = "(select close from daily)`close";
 var parallelCoordCmd = "select pnl,ADV,SR,spread,name:sym from 0!select pnl:1e6*(last close - first open)%first open, ADV:last price%avg price, SR:0.20, spread: 10e4*0.01%last price by sym from daily";
 var tradesTableCmd = "33#select from daily"

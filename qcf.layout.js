@@ -237,6 +237,23 @@ $(function() {
 });
 
 $(function() {
+  $("#testdiv").draggable({ handle: "h6" });
+  $("div, h6").disableSelection();
+  $("#testdiv" ).resizable({
+    helper: "ui-resizable-helper"
+  });
+  $("#testdiv" ).resizable({
+    grid: 10
+  });
+  $("#testdiv").resizable({
+    stop: function(event, ui) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  });
+});
+
+
+$(function() {
   $("#logpanel").draggable({ handle: "h6" });
   $("div, h6").disableSelection();
   $("#logpanel" ).resizable({

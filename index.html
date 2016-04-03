@@ -7,13 +7,16 @@
     <link href="jquery-ui.structure.css" rel="stylesheet">
     <link href="jquery-ui.theme.css" rel="stylesheet">
     <link href="jquery.dataTables.css" rel="stylesheet">
+    <link href="d3_exploding_boxplot.css" rel="stylesheet">
     <script src="c.js"></script>
     <script src="d3.js"></script>
+    <script src="d3.tip.js"></script>
     <script src="nv.d3.js"></script>
     <script src="jstat.js"></script>
     <script src="jquery.js"></script>
     <script src="jquery-ui.js"></script>
     <script src="jquery.dataTables.js"></script>
+    <script src="d3_exploding_boxplot.js"></script>
     <script src="qcf.log.js"></script>
     <script src="qcf.input.js"></script>
     <script src="qcf.layout.js"></script>
@@ -44,6 +47,9 @@
             width: 100%;
             float: center;
         }
+table.dataTable tbody th, table.dataTable tbody td {
+    padding: 2px 8px;
+}
 
         .ui-tabs .ui-tabs-panel { padding: 0em 0em 0em 0em; }
         .ui-tabs .ui-tabs-nav li a {font-size:6pt !important;}
@@ -91,7 +97,9 @@
         #resizable_l5 { width: 50%; height: 50%; border: 0px solid #c9c3ba; color: #42454a; background-color: #f1f0ee; float: left; }
 
         #settings { width:100%; height: 10%; border: 0px solid #42454a; color: #42454a; background-color: #f1f0ee; float:left; }
-        #logpanel { width:100%; height: 90%; border: 0px solid #42454a; color: #42454a; background-color: #f1f0ee; float:left; }
+        #testdiv { width:100%; height: 40%; border: 0px solid #42454a;color: #42454a; background-color: #f1f0ee; float:left; }
+        #testdivdiv { width:100%; height: 100%; border: 0px solid #42454a; color: #42454a; background-color: #f1f0ee; float:left; }
+        #logpanel { width:100%; height: 50%; border: 0px solid #42454a; color: #42454a; background-color: #f1f0ee; float:left; overflow: scroll }
         #logline { width:100%; text-align:left; color: #000000; background-color: #f1f0ee; border: 0px solid #42454a; font-size:7pt !important; }
         #settingcontrols { width:100%; height: 10%; border: 0px solid #42454a; color: #42454a; background-color: #f1f0ee; float:left; font-size:7pt !important; }
 
@@ -139,7 +147,8 @@
 	      <button type="button" onclick="setDate()">set</button>
 	  </div>
 	</div>
-	<div id="logpanel"><h6 class="ui-widget-header">Console</h6></div>
+	<div id="testdiv" class="ui-widget-content"><h6 class="ui-widget-header">TestDiv</h6><div id="testdivdiv"><svg></svg></div></div>
+	<div id="logpanel" class="ui-widget-content"><h6 class="ui-widget-header">Console</h6></div>
     </div>
   </div>
 </body>

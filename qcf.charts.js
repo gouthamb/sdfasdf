@@ -224,22 +224,56 @@ onLineViewData = function(data) {
 // box plot chart
 genBoxPlotChart = function() {
   var chart = nv.models.boxPlotChart()
-      .x(function(d) { return d.label })
+      .x(function(d) { return d.sym })
       .staggerLabels(true)
       .maxBoxWidth(75) // prevent boxes from being incredibly wide
-      .yDomain([0, 500]);
+      .outliers(function(d){ 
+          return d.outl 
+       })
+      .outlierValue(function(d) { 
+          return d.size
+       })
+      .outlierLabel(function(d) { 
+          return d.size + ' @ ' + d.date
+       })
+      .q1(function(d) { return d.q1 })
+      .q2(function(d) { return d.q2 })
+      .q3(function(d) { return d.q3 })
+      .wl(function(d) { return d.iqrmin })
+      .wh(function(d) { return d.iqrmax });
+
   nv.addGraph(function(){return chart;});
   return chart;
 };
 onBoxPlotData = function(data) {
   var cdata = data.data;
-  cdata = testBoxPlotData(); 
+  cdata = calcBoxPlotParams(cdata);    
+  //cdata = testBoxPlotData(); 
   d3.select("#chart_h3 svg")
     .datum(cdata)
     .transition()
     .duration(0)
     .call(boxPlotChart);
   nv.utils.windowResize(boxPlotChart.update);
+};
+calcBoxPlotParams = function(data) {
+  cdata = data;
+  for (i = 0; i < cdata.length; i++) { 
+     var q123 = jStat.quartiles(cdata[i].size);
+     (cdata[i]).q1= q123[0];
+     (cdata[i]).q2= q123[1];
+     (cdata[i]).q3= q123[2];
+     (cdata[i]).iqrmin= q123[0]-(0.5*(q123[2]-q123[0]));
+     (cdata[i]).iqrmax= q123[2]+(0.5*(q123[2]-q123[0]));
+     (cdata[i]).outl= [];
+     for (j=0; j < cdata[i].size.length; ++j) {
+       if (cdata[i].size[j] < cdata[i].iqrmin || cdata[i].size[j] > cdata[i].iqrmax) {
+         cdata[i].outl.push({size:cdata[i].size[j],date:cdata[i].date[j]});
+       }
+     }
+     cdata[i].outl.push({size:22.3,date:"TODAY",color:'#F00'});
+  }
+  return (cdata);
 };
 
 // histogram chart
@@ -328,6 +362,36 @@ onTradesTableData = function(data) {
   tradesDataTable = genTradesDataTable(data.data);
 }
 
+testExplodingBoxPlot = function() {
+  //generate random data
+  var box1 = d3.range(100).map(d3.random.normal(Math.random()*100,5))
+	      .map(function(d,i){return {v:d,g:'box1',t:'pt 1'+i}})
+
+  var box2 = d3.range(100).map(d3.random.normal(Math.random()*100,30))
+	      .map(function(d,i){return {v:d,g:'box2',t:'pt 2'+i}})
+
+  var box3 = d3.range(100).map(function(){return Math.random()*100})
+	      .map(function(d,i){return {v:d,g:'box3',t:'pt 3'+i}})
+  // with outliers
+  var box4 = d3.range(80).map(d3.random.normal(50,5))
+	    .concat(d3.range(20).map(d3.random.normal(50,25)))
+	    .map(function(d,i){return {v:d,g:'box4',t:'pt 4'+i}})
+
+  var data = box1.concat(box2).concat(box3).concat(box4)
+
+  // chart(data,aes)
+  // aesthetic :
+  // y : point's value on y axis
+  // group : how to group data on x axis
+  // color : color of the point / boxplot
+  // label : displayed text in toolbox
+  var chart = d3.exploding_boxplot(data,{y:'v',group:'g',color:'g',label:'t'})
+
+  //call chart on a div
+  $('#testdivdiv svg').empty();
+  chart("#testdivdiv svg")  
+}
+
 // create required instances of charts
 var ohlcChart = genOhlcChart();
 var lineBarChart = genLineBarChart();
@@ -342,3 +406,16 @@ var boxPlotChart = genBoxPlotChart();
 var histogramChart = genHistogramChart();
 var parallelCoordChart = genParallelCoordChart();
 var tradesDataTable = genTradesDataTable([]);
+
+
+var tdata = [ 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,59,78 ];
+boxplot_params = function(data) {
+    var dataq = jStat.quartiles(data);
+    var iqr = 1.5*(dataq[2]-dataq[0]);
+    var datab = data.filter(function(v) { return v >= dataq[0]-iqr && v <= dataq[3]+iqr; });
+    var datao = data.filter(function(v) { return v < dataq[0]-iqr && v > dataq[3]+iqr; });
+    var dmin = Math.min.apply(null, datab);
+    var dmax = Math.max.apply(null, datab);	
+    return;
+}
+boxplot_params(tdata)
