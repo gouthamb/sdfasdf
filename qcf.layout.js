@@ -269,4 +269,18 @@ $(function() {
   });
 });
 
+$(function() {
+  var progressbar = $( "#progressbar" ),
+    progresslabel = $( ".progress-label" );
+  progressbar.progressbar({
+    value: false,
+    change: function() {
+      progresslabel.text( progressbar.progressbar( "value" ) + "%" );
+    },
+    complete: function() {
+      progresslabel.text( "Ready!" );
+    }
+  });
+});
+
 

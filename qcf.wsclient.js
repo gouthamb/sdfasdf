@@ -19,8 +19,14 @@ var parallelCoordCmd = "select pnl,ADV,SR,spread,name:sym from 0!select pnl:1e6*
 var tradesTableCmd = "33#select from daily"
 
 // req timer
+var progressbar = $( "#progressbar" );
+var progressbar_cmdcount = 0;
+var progressbar_repcount = 0;
 function requestQCFData() {
   logMsg("Requesting data from QCF");
+  progressbar_cmdcount = 0;
+  progressbar_repcount = 0;
+  progressbar.progressbar( "value", 0 );
   ws.sendcmd(ohlcCmd);
   ws.sendcmd(lineBarCmd);
   ws.sendcmd(discBarCmd);
@@ -34,8 +40,11 @@ function requestQCFData() {
   ws.sendcmd(histogramCmd);
   ws.sendcmd(parallelCoordCmd);
   ws.sendcmd(tradesTableCmd);
+  progressbar_cmdcount = 13;
 };
 function parseQCFResult(data) {
+  progressbar_repcount = progressbar_repcount + 1;
+  progressbar.progressbar ( "value" , 100*progressbar_repcount/progressbar_cmdcount );
   if (data.fname == ohlcCmd)
     onOhlcData(data);
   if (data.fname == lineBarCmd)

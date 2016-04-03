@@ -47,9 +47,9 @@
             width: 100%;
             float: center;
         }
-table.dataTable tbody th, table.dataTable tbody td {
-    padding: 2px 8px;
-}
+	table.dataTable tbody th, table.dataTable tbody td {
+	    padding: 2px 8px;
+	}
 
         .ui-tabs .ui-tabs-panel { padding: 0em 0em 0em 0em; }
         .ui-tabs .ui-tabs-nav li a {font-size:6pt !important;}
@@ -106,7 +106,21 @@ table.dataTable tbody th, table.dataTable tbody td {
         div.ui-datepicker{ font-size:10px; }
         .ui-widget-header { margin: 2px 2px 0 0; font-size: 6pt; font-weight:normal; }
         .ui-resizable-helper { border: 2px dotted #00F; }
-    </style>
+
+	.ui-progressbar {
+          float: right;
+          width: 35%;
+	}
+	.progress-label {
+	  position: absolute;
+	  left: 5%;
+	  top: 3px;
+	  text-shadow: 1px 1px 0 #fff;
+	}
+        #connection { width:30%; height: 100% top: 5px; left: 5px; ; float:right }
+        #progressbar { width:30%; height: 100% top: 5px; left: 5px; ; float:right }
+	.resizedtextbox {width: 50%; padding: 2px}
+     </style>
   </head>
 
   <body>
@@ -116,6 +130,12 @@ table.dataTable tbody th, table.dataTable tbody td {
 	<li><a href="#hist">HIST</a></li>
 	<li><a href="#live">LIVE</a></li>
 	<li><a href="#msgs">..</a></li>
+	<div id="connection">
+	    <label for="ws">QCF.WSS  ::</label>	
+	    <input type="text" class="resizedtextbox" id="cs" name="cs" value="ws://user:pass@qcfwsshost:qcfwssport"></input>
+	    <button type="button" onclick="connectQCFWSS()">set</button>
+            <div id="progressbar"><div class="progress-label"></div></div>	
+	</div>
 	</ul>
     <div id="dash">
 	<div id="resizable_d1" class="ui-widget-content"><h6 class="ui-widget-header">Price movement</h6><div id="chart_d1"><svg></svg></div></div>
